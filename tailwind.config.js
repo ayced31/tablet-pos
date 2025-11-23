@@ -4,6 +4,9 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Helvetica", "Arial", "sans-serif"],
+      },
       colors: {
         // Custom colors matching the dark theme in screenshots
         "zinc-850": "#1f2024", // Slightly lighter than black for cards

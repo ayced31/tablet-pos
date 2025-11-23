@@ -1,6 +1,5 @@
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { clsx } from "clsx";
 import { Category } from "../types";
 
 interface CategoryFilterProps {
@@ -15,37 +14,31 @@ export const CategoryFilter = ({
   onSelectCategory,
 }: CategoryFilterProps) => {
   return (
-    <View className="mb-4">
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 4 }}
-      >
-        {categories.map((cat) => {
-          const isActive = activeCategoryId === cat.id;
-          return (
-            <TouchableOpacity
-              key={cat.id}
-              onPress={() => onSelectCategory(cat.id)}
-              className={clsx(
-                "px-6 py-2 rounded-full mr-3 border",
-                isActive
-                  ? "bg-blue-600 border-blue-500"
-                  : "bg-zinc-800 border-zinc-700"
-              )}
+    <View className="mb-4 flex-row">
+      {categories.map((cat) => {
+        const isActive = activeCategoryId === cat.id;
+        return (
+          <TouchableOpacity
+            key={cat.id}
+            onPress={() => onSelectCategory(cat.id)}
+            className="flex-row items-center mr-6 py-2"
+          >
+            {/* Green/Blue dot indicator */}
+            <View
+              className={`w-2 h-2 rounded-full mr-2 ${
+                isActive ? "bg-blue-500" : "bg-transparent"
+              }`}
+            />
+            <Text
+              className={`font-medium ${
+                isActive ? "text-blue-400" : "text-gray-400"
+              }`}
             >
-              <Text
-                className={clsx(
-                  "font-medium",
-                  isActive ? "text-white" : "text-gray-400"
-                )}
-              >
-                {cat.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+              {cat.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };

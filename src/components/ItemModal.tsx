@@ -1,153 +1,158 @@
 import React, { useState, useEffect } from "react";
 import {
-  Modal,
   View,
   Text,
   Image,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
+  ScrollView,
 } from "react-native";
-import { X, Minus, Plus } from "lucide-react-native"; // Icons [cite: 15]
+import { ArrowLeft, X, Minus, Plus, Check, UtensilsCrossed } from "lucide-react-native";
 import { Product } from "../types";
 import { useCartStore } from "../store/useCartStore";
 
 interface ItemModalProps {
-  product: Product | null; // Null means modal is closed
+  product: Product | null;
   isVisible: boolean;
   onClose: () => void;
+  initialQuantity?: number;
 }
 
-export const ItemModal = ({ product, isVisible, onClose }: ItemModalProps) => {
-  // Local state for the form
-  const [quantity, setQuantity] = useState(1);
+const MAX_NOTES_LENGTH = 80;
+
+export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: ItemModalProps) => {
+  const [quantity, setQuantity] = useState(initialQuantity);
   const [notes, setNotes] = useState("");
 
-  // Get the addToCart action from our Zustand store [cite: 14]
   const addToCart = useCartStore((state) => state.addToCart);
 
-  // Reset state whenever a new product opens
   useEffect(() => {
     if (isVisible) {
-      setQuantity(1);
+      setQuantity(initialQuantity);
       setNotes("");
     }
-  }, [isVisible, product]);
+  }, [isVisible, product, initialQuantity]);
 
-  if (!product) return null;
+  if (!product || !isVisible) return null;
 
   const handleAddToOrder = () => {
     addToCart(product, quantity, notes);
-    onClose(); // Close modal after adding
+    onClose();
   };
 
-  // Calculate total for this specific item instance
+  const handleNotesChange = (text: string) => {
+    if (text.length <= MAX_NOTES_LENGTH) {
+      setNotes(text);
+    }
+  };
+
   const totalPrice = (product.price * quantity).toFixed(2);
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={isVisible}
-      onRequestClose={onClose}
-    >
-      {/* Backdrop: Dark semi-transparent overlay */}
-      <View className="flex-1 bg-black/80 justify-center items-center p-8">
-        {/* Modal Content Container */}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="bg-zinc-900 w-full max-w-2xl rounded-2xl overflow-hidden border border-zinc-700"
-        >
-          {/* Header: Title & Close Button */}
-          <View className="flex-row justify-between items-center p-6 border-b border-zinc-800">
-            <Text className="text-2xl font-bold text-white">
-              {product.name}
-            </Text>
+    <View className="absolute inset-0 bg-black/80 justify-center items-center p-6 z-50">
+      <View className="bg-zinc-900 w-full max-w-xl rounded-2xl overflow-hidden border border-zinc-700">
+        {/* Header: Back to Menu, X, Done */}
+        <View className="flex-row justify-between items-center px-5 py-3 border-b border-zinc-800">
+          <TouchableOpacity
+            onPress={onClose}
+            className="flex-row items-center"
+          >
+            <ArrowLeft color="#9ca3af" size={18} />
+            <Text className="text-gray-400 ml-2">Back to Menu</Text>
+          </TouchableOpacity>
+
+          <View className="flex-row items-center">
             <TouchableOpacity
               onPress={onClose}
-              className="p-2 bg-zinc-800 rounded-full"
+              className="w-9 h-9 bg-red-600 rounded-lg justify-center items-center mr-2"
             >
-              <X color="#fff" size={24} />
+              <X color="#fff" size={18} />
             </TouchableOpacity>
-          </View>
-
-          <View className="flex-row p-6">
-            {/* Left Side: Image */}
-            <View className="w-1/3 mr-6">
-              <Image
-                source={{ uri: product.image }}
-                className="w-full h-48 rounded-xl bg-zinc-800"
-                resizeMode="cover"
-              />
-              <Text className="text-blue-400 text-xl font-bold mt-4 text-center">
-                ${product.price.toFixed(2)}
-              </Text>
-            </View>
-
-            {/* Right Side: Controls */}
-            <View className="flex-1">
-              {/* Quantity Controller  */}
-              <Text className="text-gray-400 mb-2 font-medium">Quantity</Text>
-              <View className="flex-row items-center mb-6">
-                <TouchableOpacity
-                  onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 bg-zinc-800 rounded-full justify-center items-center border border-zinc-700"
-                >
-                  <Minus color="#fff" size={20} />
-                </TouchableOpacity>
-
-                <Text className="text-white text-2xl font-bold mx-6">
-                  {quantity}
-                </Text>
-
-                <TouchableOpacity
-                  onPress={() => setQuantity(quantity + 1)}
-                  className="w-12 h-12 bg-blue-600 rounded-full justify-center items-center"
-                >
-                  <Plus color="#fff" size={20} />
-                </TouchableOpacity>
-              </View>
-
-              {/* Notes Field  */}
-              <Text className="text-gray-400 mb-2 font-medium">
-                Notes / Special Instructions
-              </Text>
-              <TextInput
-                className="bg-zinc-800 text-white p-4 rounded-xl h-24 mb-6 align-top border border-zinc-700"
-                placeholder="e.g. No onions, Extra spicy..."
-                placeholderTextColor="#666"
-                multiline
-                value={notes}
-                onChangeText={setNotes}
-              />
-            </View>
-          </View>
-
-          {/* Footer: Total & Add Button */}
-          <View className="p-6 bg-zinc-850 border-t border-zinc-800 flex-row justify-between items-center">
-            <View>
-              <Text className="text-gray-400 text-sm">Total Price</Text>
-              <Text className="text-white text-3xl font-bold">
-                ${totalPrice}
-              </Text>
-            </View>
-
             <TouchableOpacity
               onPress={handleAddToOrder}
-              className="bg-blue-600 px-8 py-4 rounded-xl flex-row items-center"
+              className="flex-row items-center bg-green-600 px-3 py-2 rounded-lg"
             >
-              <Text className="text-white font-bold text-lg mr-2">
-                Add to Order
-              </Text>
-              <Text className="text-blue-200 font-bold text-lg">
-                {" "}
-                | ${totalPrice}
-              </Text>
+              <Text className="text-white font-medium mr-1 text-sm">Done</Text>
+              <Check color="#fff" size={14} />
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
+        </View>
+
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Product Info Row */}
+          <View className="flex-row items-center px-5 py-4 border-b border-zinc-800">
+            {product.image ? (
+              <Image
+                source={{ uri: product.image }}
+                className="w-14 h-14 rounded-lg bg-zinc-800 mr-4"
+                resizeMode="cover"
+              />
+            ) : (
+              <View className="w-14 h-14 rounded-lg bg-zinc-800 mr-4 justify-center items-center">
+                <UtensilsCrossed color="#6b7280" size={24} />
+              </View>
+            )}
+            <View>
+              <Text className="text-white text-lg font-bold">
+                {product.name}
+              </Text>
+              <Text className="text-blue-400 font-medium">
+                Base ${product.price.toFixed(2)}
+              </Text>
+            </View>
+          </View>
+
+          {/* Quantity Section */}
+          <View className="px-5 py-4">
+            <Text className="text-gray-400 mb-3 font-medium">Quantity</Text>
+            <View className="flex-row items-center justify-center">
+              <TouchableOpacity
+                onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                className="w-11 h-11 bg-zinc-700 rounded-lg justify-center items-center border border-zinc-600"
+              >
+                <Minus color="#9ca3af" size={18} />
+              </TouchableOpacity>
+
+              <View className="w-14 h-11 bg-zinc-800 mx-3 rounded-lg justify-center items-center border border-zinc-600">
+                <Text className="text-white text-lg font-bold">{quantity}</Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setQuantity(quantity + 1)}
+                className="w-11 h-11 bg-green-600 rounded-lg justify-center items-center"
+              >
+                <Plus color="#fff" size={18} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Notes Section */}
+          <View className="px-5 py-4">
+            <Text className="text-gray-400 mb-2 font-medium">Notes</Text>
+            <TextInput
+              className="bg-zinc-800 text-white p-3 rounded-lg h-16 border border-zinc-700"
+              placeholder="No onions..."
+              placeholderTextColor="#666"
+              multiline
+              value={notes}
+              onChangeText={handleNotesChange}
+              maxLength={MAX_NOTES_LENGTH}
+              textAlignVertical="top"
+            />
+            <Text className="text-gray-600 text-xs text-right mt-1">
+              {notes.length}/{MAX_NOTES_LENGTH}
+            </Text>
+          </View>
+
+          {/* Total Row */}
+          <View className="mx-5 mb-5 bg-zinc-800 rounded-lg p-3 flex-row justify-between items-center border border-zinc-700">
+            <Text className="text-white font-bold text-base">Total</Text>
+            <Text className="text-orange-500 font-bold text-lg">
+              ${totalPrice}
+            </Text>
+          </View>
+        </ScrollView>
       </View>
-    </Modal>
+    </View>
   );
 };
