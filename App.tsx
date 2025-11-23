@@ -125,28 +125,32 @@ export default function App() {
             </Text>
 
             {/* Cart Title with Item Count */}
-            <View className="px-4 py-2 flex-row justify-between items-center border-t border-zinc-800">
-              <View className="flex-row items-center">
+            <View className="px-4 py-2 flex-row justify-between items-center">
+              <View>
                 <Text className="text-white text-lg font-bold">Cart</Text>
-                <View className="w-1 h-4 bg-red-500 ml-2" />
+                <View className="w-8 h-0.5 bg-blue-500 mt-1" />
               </View>
-              <Text className="text-gray-500 text-sm">{cart.length} Items</Text>
+              <View className="bg-zinc-800 px-3 py-1 rounded-full">
+                <Text className="text-gray-400 text-sm">{cart.reduce((sum, item) => sum + item.quantity, 0)} Items</Text>
+              </View>
             </View>
 
             {/* Course Badge & Status */}
             {cart.length > 0 && (
-              <View className="px-4 py-2 flex-row items-center">
-                <View className="bg-zinc-700 px-3 py-1 rounded-full mr-2">
-                  <Text className="text-gray-300 text-xs">Course 1</Text>
+              <View className="px-4 py-1 flex-row items-center justify-between">
+                <View className="bg-zinc-800 px-2 py-0.5 rounded-full">
+                  <Text className="text-gray-400 text-xs">Course 1</Text>
                 </View>
-                <View className="bg-red-900/50 px-3 py-1 rounded-full mr-2">
-                  <Text className="text-red-400 text-xs">Unpaid</Text>
-                </View>
-                <View className="bg-blue-900/50 px-3 py-1 rounded-full mr-2">
-                  <Text className="text-blue-400 text-xs">Building</Text>
-                </View>
-                <View className="bg-purple-900/50 px-3 py-1 rounded-full">
-                  <Text className="text-purple-400 text-xs">Opened</Text>
+                <View className="flex-row items-center">
+                  <View className="bg-red-900/50 px-2 py-0.5 rounded-full mr-1">
+                    <Text className="text-red-400 text-xs">Unpaid</Text>
+                  </View>
+                  <View className="bg-blue-900/50 px-2 py-0.5 rounded-full mr-1">
+                    <Text className="text-blue-400 text-xs">Building</Text>
+                  </View>
+                  <View className="bg-green-900/50 px-2 py-0.5 rounded-full">
+                    <Text className="text-green-400 text-xs">Opened</Text>
+                  </View>
                 </View>
               </View>
             )}
@@ -185,7 +189,7 @@ export default function App() {
             </View>
 
             {/* Calculation Footer */}
-            <View className="bg-zinc-950 px-4 py-3 border-t border-zinc-800">
+            <View className="bg-zinc-950 px-4 py-3">
               <View className="flex-row justify-between mb-1">
                 <Text className="text-gray-400 text-sm">Subtotal</Text>
                 <Text className="text-white text-sm">
@@ -196,7 +200,7 @@ export default function App() {
                 <Text className="text-gray-400 text-sm">Tax</Text>
                 <Text className="text-white text-sm">${tax.toFixed(2)}</Text>
               </View>
-              <View className="flex-row justify-between mb-2">
+              <View className="flex-row justify-between mb-1">
                 <Text className="text-gray-400 text-sm">Voucher</Text>
                 <Text className="text-white text-sm">$0.00</Text>
               </View>
@@ -207,14 +211,14 @@ export default function App() {
               </View>
 
               {/* Action Buttons Row */}
-              <View className="flex-row mb-3">
-                <TouchableOpacity className="flex-row items-center bg-zinc-800 px-3 py-2 rounded-lg mr-2 border border-zinc-700">
+              <View className="flex-row mb-3 justify-between border-b border-zinc-800 pb-3">
+                <TouchableOpacity className="flex-row items-center bg-zinc-800 px-3 py-2 rounded-lg border border-zinc-700">
                   <Tag color="#9ca3af" size={14} />
                   <Text className="text-gray-300 text-sm ml-1">Discounts</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="flex-row items-center bg-zinc-800 px-3 py-2 rounded-lg flex-1 border border-zinc-700">
+                <TouchableOpacity className="flex-row items-center bg-zinc-900 px-3 py-2 rounded-lg border border-zinc-700">
                   <Text className="text-gray-300 text-sm">
-                    Send to Kitchen ({cart.length})
+                    Send to Kitchen ({cart.reduce((sum, item) => sum + item.quantity, 0)})
                   </Text>
                   <Send color="#9ca3af" size={14} style={{ marginLeft: 4 }} />
                 </TouchableOpacity>
@@ -222,12 +226,12 @@ export default function App() {
 
               {/* Pay Buttons Row */}
               <View className="flex-row">
-                <TouchableOpacity className="bg-zinc-800 px-6 py-3 rounded-lg mr-2 border border-zinc-700">
+                <TouchableOpacity className="flex-1 bg-zinc-800 py-3 rounded-lg mr-2 border border-zinc-700 items-center">
                   <Text className="text-white font-medium">More</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   className={`flex-1 py-3 rounded-lg items-center ${
-                    cart.length === 0 ? "bg-zinc-700" : "bg-orange-600"
+                    cart.length === 0 ? "bg-zinc-700" : "bg-blue-600"
                   }`}
                   disabled={cart.length === 0}
                 >
