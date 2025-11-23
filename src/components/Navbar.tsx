@@ -4,7 +4,7 @@ import { ChevronLeft, Plus } from "lucide-react-native";
 
 export const Navbar = () => {
   return (
-    <View className="bg-zinc-950 px-4 py-3 flex-row justify-between items-center border-b border-zinc-800">
+    <View className="bg-app-bg px-4 py-3 flex-row justify-between items-center border-b border-zinc-800">
       {/* Left: Back to Menu */}
       <TouchableOpacity className="flex-row items-center">
         <View className="w-8 h-8 bg-zinc-800 rounded-lg justify-center items-center mr-2">

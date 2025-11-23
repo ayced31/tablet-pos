@@ -77,22 +77,14 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-zinc-950">
+      <SafeAreaView className="flex-1 bg-app-bg">
         <StatusBar hidden />
 
-        {/* ============================================================
-            NAVBAR - FULL WIDTH AT TOP
-           ============================================================ */}
         <Navbar />
 
-        {/* ============================================================
-            MAIN CONTENT - TWO COLUMNS
-           ============================================================ */}
+        {/* CART SECTION */}
         <View className="flex-1 flex-row">
-          {/* ============================================================
-              LEFT COLUMN: THE CART (35%)
-             ============================================================ */}
-          <View className="w-[35%] h-full bg-zinc-950 border-r border-zinc-800">
+          <View className="w-[35%] h-full bg-app-bg border-r border-zinc-800">
             {/* Customer & Order Type Section */}
             <View className="flex-row px-4 py-3">
               {/* Customer */}
@@ -131,7 +123,9 @@ export default function App() {
                 <View className="w-8 h-0.5 bg-blue-500 mt-1" />
               </View>
               <View className="bg-zinc-800 px-3 py-1 rounded-full">
-                <Text className="text-gray-400 text-sm">{cart.reduce((sum, item) => sum + item.quantity, 0)} Items</Text>
+                <Text className="text-gray-400 text-sm">
+                  {cart.reduce((sum, item) => sum + item.quantity, 0)} Items
+                </Text>
               </View>
             </View>
 
@@ -189,7 +183,7 @@ export default function App() {
             </View>
 
             {/* Calculation Footer */}
-            <View className="bg-zinc-950 px-4 py-3">
+            <View className="bg-app-bg px-4 py-3">
               <View className="flex-row justify-between mb-1">
                 <Text className="text-gray-400 text-sm">Subtotal</Text>
                 <Text className="text-white text-sm">
@@ -207,7 +201,9 @@ export default function App() {
 
               <View className="flex-row justify-between mb-3 items-center">
                 <Text className="text-white font-bold">Total</Text>
-                <Text className="text-white font-bold">${total.toFixed(2)}</Text>
+                <Text className="text-white font-bold">
+                  ${total.toFixed(2)}
+                </Text>
               </View>
 
               {/* Action Buttons Row */}
@@ -218,7 +214,8 @@ export default function App() {
                 </TouchableOpacity>
                 <TouchableOpacity className="flex-row items-center bg-zinc-900 px-3 py-2 rounded-lg border border-zinc-700">
                   <Text className="text-gray-300 text-sm">
-                    Send to Kitchen ({cart.reduce((sum, item) => sum + item.quantity, 0)})
+                    Send to Kitchen (
+                    {cart.reduce((sum, item) => sum + item.quantity, 0)})
                   </Text>
                   <Send color="#9ca3af" size={14} style={{ marginLeft: 4 }} />
                 </TouchableOpacity>
@@ -243,10 +240,8 @@ export default function App() {
             </View>
           </View>
 
-          {/* ============================================================
-              RIGHT COLUMN: THE MENU (65%)
-             ============================================================ */}
-          <View className="w-[65%] h-full bg-zinc-950">
+          {/* MENU SECTION */}
+          <View className="w-[65%] h-full bg-app-bg">
             {/* Order Line Header */}
             <View className="flex-row justify-between items-center px-4 py-3 border-b border-zinc-800">
               <Text className="text-white text-lg font-medium">Order Line</Text>
@@ -258,16 +253,15 @@ export default function App() {
               {/* Left: Menu Tab with Order Type */}
               <View className="flex-row items-center">
                 <Text className="text-white font-bold mr-3">Menu</Text>
-                <View className="bg-zinc-800 px-3 py-1 rounded">
-                  <Text className="text-blue-400 text-sm">
-                    Order Type: Takeaway
-                  </Text>
+                <View className="bg-zinc-800 px-3 py-1 rounded flex-row items-center">
+                  <Text className="text-white text-sm">Order Type: </Text>
+                  <Text className="text-blue-400 text-sm">Takeaway</Text>
                 </View>
               </View>
 
               {/* Right: Icon Toolbar */}
               <View className="flex-row items-center">
-                <TouchableOpacity className="w-10 h-10 bg-zinc-800 rounded-lg justify-center items-center mr-2 border border-zinc-600">
+                <TouchableOpacity className="w-10 h-10 bg-zinc-800 rounded-lg justify-center items-center mr-2 border border-blue-900">
                   <LayoutGrid color="#fff" size={18} />
                 </TouchableOpacity>
                 <TouchableOpacity className="w-10 h-10 bg-zinc-800 rounded-lg justify-center items-center mr-2">
@@ -295,7 +289,7 @@ export default function App() {
             </View>
 
             {/* Category Filter */}
-            <View className="bg-zinc-900 px-4 py-2">
+            <View className="bg-zinc-800 px-4 py-1">
               <CategoryFilter
                 categories={CATEGORIES}
                 activeCategoryId={activeCategory}

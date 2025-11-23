@@ -45,15 +45,19 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   updateQuantity: (productId, delta) => {
-    set((state) => ({
-      cart: state.cart.map((item) => {
-        if (item.id === productId) {
-          const newQuantity = Math.max(1, item.quantity + delta); // Prevent going below 1
-          return { ...item, quantity: newQuantity };
-        }
-        return item;
-      }),
-    }));
+    set((state) => {
+      const updatedCart = state.cart
+        .map((item) => {
+          if (item.id === productId) {
+            const newQuantity = item.quantity + delta;
+            return { ...item, quantity: newQuantity };
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0); // Remove items with quantity 0 or less
+
+      return { cart: updatedCart };
+    });
   },
 
   clearCart: () => set({ cart: [] }),

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Category } from "../types";
 
 interface CategoryFilterProps {
@@ -14,24 +14,26 @@ export const CategoryFilter = ({
   onSelectCategory,
 }: CategoryFilterProps) => {
   return (
-    <View className="mb-4 flex-row">
+    <View className="flex-row">
       {categories.map((cat) => {
         const isActive = activeCategoryId === cat.id;
         return (
           <TouchableOpacity
             key={cat.id}
             onPress={() => onSelectCategory(cat.id)}
-            className="flex-row items-center mr-6 py-2"
+            className={`flex-row items-center mr-4 py-1.5 px-2 rounded ${
+              isActive ? "bg-zinc-900" : ""
+            }`}
           >
-            {/* Green/Blue dot indicator */}
+            {/* Green dot indicator */}
             <View
               className={`w-2 h-2 rounded-full mr-2 ${
-                isActive ? "bg-blue-500" : "bg-transparent"
+                isActive ? "bg-green-500" : "bg-transparent"
               }`}
             />
             <Text
-              className={`font-medium ${
-                isActive ? "text-blue-400" : "text-gray-400"
+              className={`text-sm ${
+                isActive ? "text-sky-500" : "text-gray-400"
               }`}
             >
               {cat.name}

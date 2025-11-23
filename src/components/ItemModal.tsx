@@ -7,7 +7,14 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import { ArrowLeft, X, Minus, Plus, Check, UtensilsCrossed } from "lucide-react-native";
+import {
+  ArrowLeft,
+  X,
+  Minus,
+  Plus,
+  Check,
+  UtensilsCrossed,
+} from "lucide-react-native";
 import { Product } from "../types";
 import { useCartStore } from "../store/useCartStore";
 
@@ -20,11 +27,17 @@ interface ItemModalProps {
 
 const MAX_NOTES_LENGTH = 80;
 
-export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: ItemModalProps) => {
+export const ItemModal = ({
+  product,
+  isVisible,
+  onClose,
+  initialQuantity = 1,
+}: ItemModalProps) => {
   const [quantity, setQuantity] = useState(initialQuantity);
   const [notes, setNotes] = useState("");
 
   const addToCart = useCartStore((state) => state.addToCart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
 
   useEffect(() => {
     if (isVisible) {
@@ -36,7 +49,13 @@ export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: 
   if (!product || !isVisible) return null;
 
   const handleAddToOrder = () => {
-    addToCart(product, quantity, notes);
+    if (quantity === 0) {
+      removeFromCart(product.id);
+    } else {
+      // Remove existing and add with new quantity
+      removeFromCart(product.id);
+      addToCart(product, quantity, notes);
+    }
     onClose();
   };
 
@@ -53,10 +72,7 @@ export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: 
       <View className="bg-zinc-900 w-full max-w-xl rounded-2xl overflow-hidden border border-zinc-700">
         {/* Header: Back to Menu, X, Done */}
         <View className="flex-row justify-between items-center px-5 py-3 border-b border-zinc-800">
-          <TouchableOpacity
-            onPress={onClose}
-            className="flex-row items-center"
-          >
+          <TouchableOpacity onPress={onClose} className="flex-row items-center">
             <ArrowLeft color="#9ca3af" size={18} />
             <Text className="text-gray-400 ml-2">Back to Menu</Text>
           </TouchableOpacity>
@@ -107,8 +123,8 @@ export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: 
             <Text className="text-gray-400 mb-3 font-medium">Quantity</Text>
             <View className="flex-row items-center justify-center">
               <TouchableOpacity
-                onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-11 h-11 bg-zinc-700 rounded-lg justify-center items-center border border-zinc-600"
+                onPress={() => setQuantity(Math.max(0, quantity - 1))}
+                className="w-11 h-11 bg-zinc-700 rounded-full justify-center items-center border border-zinc-600"
               >
                 <Minus color="#9ca3af" size={18} />
               </TouchableOpacity>
@@ -119,7 +135,7 @@ export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: 
 
               <TouchableOpacity
                 onPress={() => setQuantity(quantity + 1)}
-                className="w-11 h-11 bg-green-600 rounded-lg justify-center items-center"
+                className="w-11 h-11 bg-blue-600 rounded-full justify-center items-center"
               >
                 <Plus color="#fff" size={18} />
               </TouchableOpacity>
@@ -147,9 +163,7 @@ export const ItemModal = ({ product, isVisible, onClose, initialQuantity = 1 }: 
           {/* Total Row */}
           <View className="mx-5 mb-5 bg-zinc-800 rounded-lg p-3 flex-row justify-between items-center border border-zinc-700">
             <Text className="text-white font-bold text-base">Total</Text>
-            <Text className="text-orange-500 font-bold text-lg">
-              ${totalPrice}
-            </Text>
+            <Text className="text-white font-bold text-lg">${totalPrice}</Text>
           </View>
         </ScrollView>
       </View>

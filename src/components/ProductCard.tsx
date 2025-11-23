@@ -11,16 +11,24 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onPress }: ProductCardProps) => {
   // Check if product has a valid image (not empty)
   const hasImage = product.image && product.image.length > 0;
+  const isOutOfStock = !product.inStock;
+
+  const handlePress = () => {
+    if (!isOutOfStock) {
+      onPress(product);
+    }
+  };
 
   return (
     <TouchableOpacity
-      onPress={() => onPress(product)}
+      onPress={handlePress}
       className="flex-1 bg-zinc-800 rounded-xl overflow-hidden border border-zinc-700"
-      activeOpacity={0.7}
-      style={{ minWidth: 140, maxWidth: 180 }}
+      activeOpacity={isOutOfStock ? 1 : 0.7}
+      disabled={isOutOfStock}
+      style={{ minWidth: 140, maxWidth: 180, opacity: isOutOfStock ? 0.5 : 1 }}
     >
       {/* Image/Icon Section */}
-      <View className="w-full h-24 bg-zinc-900 justify-center items-center relative">
+      <View className="w-full h-24 bg-zinc-800 justify-center items-center relative">
         {hasImage ? (
           <Image
             source={{ uri: product.image }}
@@ -37,14 +45,11 @@ export const ProductCard = ({ product, onPress }: ProductCardProps) => {
       </View>
 
       {/* Separator Line */}
-      <View className="h-px bg-zinc-600" />
+      <View className="h-px bg-blue-900" />
 
       {/* Details Section */}
       <View className="p-3">
-        <Text
-          className="text-white text-sm font-medium mb-1"
-          numberOfLines={1}
-        >
+        <Text className="text-white text-sm font-medium mb-1" numberOfLines={1}>
           {product.name}
         </Text>
 
