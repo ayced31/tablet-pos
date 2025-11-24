@@ -7,7 +7,7 @@ A modern Point of Sale (POS) system designed for tablets, built with React Nativ
 ### Prerequisites
 - **Node.js**: Version 18 or higher
 - **npm** or **yarn**: Package manager
-- **Expo CLI**: Install globally with `npm install -g expo-cli`
+- **Expo CLI**: Install globally with `npm install -g @expo/cli`
 
 ### For Platform-Specific Development
 - **iOS**: macOS with Xcode installed
